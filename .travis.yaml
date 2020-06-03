@@ -1,0 +1,12 @@
+language: generic
+sudo: required  # with docker superuser permission are needed
+services:
+  - docker # tell travis to have a copy of docker installed
+before_install: # command executed before start test or deploy
+  - docker build -t chiaponz/docker-react -f Dockerfile.dev . # build docker image
+# command that are ran as main command (launch tests)
+# here travis expect that command is executed and than return the result
+# but "npm run test" execute test and than wait for the user to insert input in command line, it does not returned
+script:
+  # -e CI=true used to exit from test when finished, -- --coverage return some additional info on tests
+  - docker run -e CI=true chiaponz/docker-react npm run test -- --coverage
